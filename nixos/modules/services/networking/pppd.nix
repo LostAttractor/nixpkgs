@@ -135,6 +135,9 @@ in
               SystemCallFilter = "@system-service";
               SystemCallArchitectures = "native";
 
+              # pppd will write /etc/ppp/resolv.conf to this file when usepeerdns is enable
+              ReadWritePaths = "/etc/ppp";
+
               # All pppd instances on a system must share a runtime
               # directory in order for PPP multilink to work correctly. So
               # we give all instances the same /run/pppd directory to store
