@@ -44,9 +44,15 @@ in
                 description = "Whether the PPP session is automatically started at boot time.";
               };
 
+              configFile = mkOption {
+                type = types.nullOr types.path;
+                default = null;
+                description = "Path of pppd configuration for this peer, see the pppd(8) man page.";
+              };
+
               config = mkOption {
-                type = types.lines;
-                default = "";
+                type = types.nullOr types.lines;
+                default = null;
                 description = "pppd configuration for this peer, see the pppd(8) man page.";
               };
             };
@@ -60,7 +66,10 @@ in
 
     mkEtc = peerCfg: {
       name = "ppp/peers/${peerCfg.name}";
-      value.text = peerCfg.config;
+      value = {
+        text = if peerCfg.configFile == null then peerCfg.config else null;
+        source = if peerCfg.configFile != null then peerCfg.configFile else null;
+      };
     };
 
     mkSystemd = peerCfg: {
@@ -123,6 +132,9 @@ in
           SecureBits = "no-setuid-fixup-locked noroot-locked";
           SystemCallFilter = "@system-service";
           SystemCallArchitectures = "native";
+
+          # pppd will write resolv.conf to this file when usepeerdns is enable
+          ReadWritePaths = "/etc/ppp/resolv.conf";
 
           # All pppd instances on a system must share a runtime
           # directory in order for PPP multilink to work correctly. So
