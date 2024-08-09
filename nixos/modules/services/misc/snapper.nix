@@ -47,7 +47,7 @@ let
     };
 
     FSTYPE = lib.mkOption {
-      type = lib.types.enum [ "btrfs" ];
+      type = lib.types.enum [ "btrfs" "bcachefs" ];
       default = "btrfs";
       description = ''
         Filesystem type. Only btrfs is stable and tested.
