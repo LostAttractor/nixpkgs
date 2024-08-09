@@ -4,6 +4,7 @@ with lib;
 
 let
   cfg = config.services.cloudflared;
+  format = pkgs.formats.yaml {};
 
   originRequest = {
     connectTimeout = mkOption {
@@ -297,7 +298,7 @@ in
                 ++ [{ service = tunnel.default; }];
             };
 
-            mkConfigFile = pkgs.writeText "cloudflared.yml" (builtins.toJSON fullConfig);
+            mkConfigFile = format.generate "cloudflared.yml" fullConfig;
           in
           nameValuePair "cloudflared-tunnel-${name}" ({
             after = [ "network.target" "network-online.target" ];
