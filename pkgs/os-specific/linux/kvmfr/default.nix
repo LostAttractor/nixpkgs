@@ -9,6 +9,11 @@ stdenv.mkDerivation {
   hardeningDisable = [ "pic" "format" ];
   nativeBuildInputs = kernel.moduleBuildDependencies;
 
+  patches = [
+    # Fix build for linux 6.10
+    ./module-fix-build-on-linux-6.10.patch
+  ];
+
   makeFlags = [
     "KVER=${kernel.modDirVersion}"
     "KDIR=${kernel.dev}/lib/modules/${kernel.modDirVersion}/build"
