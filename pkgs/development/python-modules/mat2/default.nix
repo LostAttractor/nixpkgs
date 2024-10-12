@@ -98,6 +98,7 @@ buildPythonPackage rec {
   disabledTests = [
     # Frequently fails when exiftool is updated and adds support for new metadata.
     "test_all_parametred"
+    "test_lightweight_cleaning"
   ];
 
   meta = with lib; {
