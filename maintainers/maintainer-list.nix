@@ -960,6 +960,12 @@
     githubId = 49609151;
     name = "Popa Ioan Alexandru";
   };
+  alexandru0-dev = {
+    email = "alexandru.italia32+nixpkgs@gmail.com";
+    github = "alexandru0-dev";
+    githubId = 45104896;
+    name = "Alexandru Nechita";
+  };
   alexarice = {
     email = "alexrice999@hotmail.co.uk";
     github = "alexarice";
@@ -7589,6 +7595,12 @@
     githubId = 91987;
     name = "Jim Garrison";
   };
+  garyguo = {
+    email = "gary@garyguo.net";
+    github = "nbdd0121";
+    githubId = 4065244;
+    name = "Gary Guo";
+  };
   gavin = {
     email = "gavin.rogers@holo.host";
     github = "gavinrogers";
@@ -7668,6 +7680,12 @@
     github = "GenericNerdyUsername";
     githubId = 111183546;
     keys = [ { fingerprint = "58CE D4BE 6B10 149E DA80  A990 2F48 6356 A4CB 30F3"; } ];
+  };
+  genga898 = {
+    email = "genga898@gmail.com";
+    github = "genga898";
+    githubId = 84174227;
+    name = "Emmanuel Genga";
   };
   genofire = {
     name = "genofire";
@@ -11697,6 +11715,13 @@
     github = "l0b0";
     githubId = 168301;
     name = "Victor Engmark";
+  };
+  l33tname = {
+    name = "l33tname";
+    email = "hi@l33t.name";
+
+    github = "Fliiiix";
+    githubId = 1682954;
   };
   l3af = {
     email = "L3afMeAlon3@gmail.com";
@@ -18391,6 +18416,18 @@
     githubId = 1217934;
     name = "José Romildo Malaquias";
   };
+  romner-set = {
+    email = "admin@cynosure.red";
+    github = "romner-set";
+    githubId = 41077433;
+    name = "romner-set";
+    keys = [
+      {
+        # uploaded to https://keys.openpgp.org
+        fingerprint = "4B75 244B 0279 9598 FF3B  C21F 95FC 58F1 8CFD FAB0";
+      }
+    ];
+  };
   ronanmacf = {
     email = "macfhlar@tcd.ie";
     github = "RonanMacF";
@@ -18657,6 +18694,12 @@
     github = "R-VdP";
     githubId = 141248;
     name = "Ramses";
+  };
+  rvfg = {
+    email = "i@rvf6.com";
+    github = "duament";
+    githubId = 30264485;
+    name = "Rvfg";
   };
   rvl = {
     email = "dev+nix@rodney.id.au";
