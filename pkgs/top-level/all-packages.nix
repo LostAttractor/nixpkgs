@@ -7201,8 +7201,6 @@ with pkgs;
 
   tsm-client-withGui = callPackage ../by-name/ts/tsm-client/package.nix { enableGui = true; };
 
-  tracker = callPackage ../development/libraries/tracker { };
-
   tracy-x11 = callPackage ../by-name/tr/tracy/package.nix { withWayland = false; };
 
   trivy = callPackage ../tools/admin/trivy { };
@@ -11002,10 +11000,8 @@ with pkgs;
 
   perceptualdiff = callPackage ../tools/graphics/perceptualdiff { };
 
-  inherit (import ../servers/sql/percona-server pkgs) percona-server_lts percona-server_innovation;
-  percona-server = percona-server_lts;
-  inherit (import ../tools/backup/percona-xtrabackup pkgs) percona-xtrabackup_lts percona-xtrabackup_innovation;
-  percona-xtrabackup = percona-xtrabackup_lts;
+  inherit (import ../servers/sql/percona-server pkgs) percona-server_8_0 percona-server_8_4 percona-server;
+  inherit (import ../tools/backup/percona-xtrabackup pkgs) percona-xtrabackup_8_0 percona-xtrabackup_8_4 percona-xtrabackup;
 
   pick = callPackage ../tools/misc/pick { };
 
@@ -35573,6 +35569,7 @@ with pkgs;
     gnome44Extensions
     gnome45Extensions
     gnome46Extensions
+    gnome47Extensions
   ;
 
   gnome-extensions-cli = python3Packages.callPackage ../desktops/gnome/misc/gnome-extensions-cli { };

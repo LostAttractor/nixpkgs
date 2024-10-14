@@ -1245,9 +1245,11 @@ mapAliases {
   pcsxr = throw "pcsxr was removed as it has been abandoned for over a decade; please use DuckStation, Mednafen, or the RetroArch PCSX ReARMed core"; # Added 2024-08-20
   pdf2xml = throw "'pdf2xml' was removed: abandoned for years."; # Added 2023-10-22
   peach = asouldocs; # Added 2022-08-28
+  percona-server_innovation = lib.warn "Percona upstream has decided to skip all Innovation releases of MySQL and only release LTS versions." percona-server; # Added 2024-10-13
+  percona-server_lts = percona-server; # Added 2024-10-13
+  percona-xtrabackup_innovation = lib.warn "Percona upstream has decided to skip all Innovation releases of MySQL and only release LTS versions." percona-xtrabackup; # Added 2024-10-13
+  percona-xtrabackup_lts = percona-xtrabackup; # Added 2024-10-13
   pentablet-driver = xp-pen-g430-driver; # Added 2022-06-23
-  percona-server_8_0 = percona-server_lts; # Added 2024-05-07
-  percona-xtrabackup_8_0 = percona-xtrabackup_lts; # Added 2024-05-07
   perldevel = throw "'perldevel' has been dropped due to lack of updates in nixpkgs and lack of consistent support for devel versions by 'perl-cross' releases, use 'perl' instead";
   perldevelPackages = perldevel;
   petrinizer = throw "'petrinizer' has been removed, as it was broken and unmaintained"; # added 2024-05-09
@@ -1610,6 +1612,8 @@ mapAliases {
   transmission-qt = lib.warn (transmission3Warning {suffix = "-qt";}) transmission_3-qt; # Added 2024-06-10
   treefmt = treefmt2; # 2024-06-28
   libtransmission = lib.warn (transmission3Warning {prefix = "lib";}) libtransmission_3; # Added 2024-06-10
+  tracker = lib.warn "tracker has been renamed to tinysparql" tinysparql; # Added 2024-09-30
+  tracker-miners = lib.warn "tracker-miners has been renamed to localsearch" localsearch; # Added 2024-09-30
   transfig = fig2dev; # Added 2022-02-15
   transifex-client = transifex-cli; # Added 2023-12-29
   trfl = throw "trfl has been removed, because it has not received an update for 3 years and was broken"; # Added 2024-07-25

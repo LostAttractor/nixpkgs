@@ -22,25 +22,25 @@
 , gnome
 , icu
 , libuuid
-, libsoup
 , libsoup_3
 , json-glib
 , avahi
 , systemd
 , dbus
+, man-db
 , writeText
 , testers
 }:
 
 stdenv.mkDerivation (finalAttrs: {
-  pname = "tracker";
-  version = "3.7.3";
+  pname = "tinysparql";
+  version = "3.8.0";
 
   outputs = [ "out" "dev" "devdoc" ];
 
   src = fetchurl {
-    url = with finalAttrs; "mirror://gnome/sources/${pname}/${lib.versions.majorMinor version}/${pname}-${version}.tar.xz";
-    hash = "sha256-qz1KUJN+BMXteEb227mZ4pCYGUAvOJylku5rd90o0fk=";
+    url = with finalAttrs; "mirror://gnome/sources/tinysparql/${lib.versions.majorMinor version}/tinysparql-${version}.tar.xz";
+    hash = "sha256-wPzad1IPUxVIsjlRN9zRk+6c3l4iLTydJz8DDRdipQQ=";
   };
 
   strictDeps = true;
@@ -72,7 +72,6 @@ stdenv.mkDerivation (finalAttrs: {
     libxml2
     sqlite
     icu
-    libsoup
     libsoup_3
     libuuid
     json-glib
@@ -85,16 +84,16 @@ stdenv.mkDerivation (finalAttrs: {
 
   nativeCheckInputs = [
     dbus
+    man-db
   ];
 
   mesonFlags = [
     "-Ddocs=true"
     (lib.mesonEnable "introspection" withIntrospection)
     (lib.mesonEnable "vapi" withIntrospection)
-    (lib.mesonBool "test_utils" withIntrospection)
   ] ++ (
     let
-      # https://gitlab.gnome.org/GNOME/tracker/-/blob/master/meson.build#L159
+      # https://gitlab.gnome.org/GNOME/tinysparql/-/blob/3.7.3/meson.build#L170
       crossFile = writeText "cross-file.conf" ''
         [properties]
         sqlite3_has_fts5 = '${lib.boolToString (lib.hasInfix "-DSQLITE_ENABLE_FTS3" sqlite.NIX_CFLAGS_COMPILE)}'
@@ -108,10 +107,12 @@ stdenv.mkDerivation (finalAttrs: {
   ];
 
   doCheck =
-    # https://gitlab.gnome.org/GNOME/tracker/-/issues/402
+    # https://gitlab.gnome.org/GNOME/tinysparql/-/issues/402
     !stdenv.hostPlatform.isDarwin
-    # https://gitlab.gnome.org/GNOME/tracker/-/issues/398
-    && !stdenv.hostPlatform.is32bit;
+    # https://gitlab.gnome.org/GNOME/tinysparql/-/issues/398
+    && !stdenv.hostPlatform.is32bit
+    # https://gitlab.gnome.org/GNOME/tinysparql/-/issues/474
+    && !stdenv.hostPlatform.isMusl;
 
   postPatch = ''
     chmod +x \
@@ -121,6 +122,11 @@ stdenv.mkDerivation (finalAttrs: {
       utils/data-generators/cc/generate \
       docs/reference/libtracker-sparql/embed-files.py \
       docs/reference/libtracker-sparql/generate-svgs.sh
+
+    # File "/build/tinysparql-3.8.0/tests/functional-tests/test_cli.py", line 233, in test_help
+    # self.assertIn("TINYSPARQL-IMPORT(1)", output, "Manpage not found")
+    # AssertionError: 'TINYSPARQL-IMPORT(1)' not found in '\x1b[4mTINYSPARQL-IMPORT\x1b[24m(1) ...'
+    substituteInPlace tests/functional-tests/test_cli.py --replace-fail "TINYSPARQL-IMPORT(1)" "TINYSPARQL-IMPORT"
   '';
 
   preCheck =
@@ -138,16 +144,17 @@ stdenv.mkDerivation (finalAttrs: {
       # though, so we need to replace the absolute path with a local one during build.
       # We are using a symlink that will be overridden during installation.
       mkdir -p $out/lib
-      ln -s $PWD/src/libtracker-sparql/libtracker-sparql-3.0${darwinDot0}${extension} $out/lib/libtracker-sparql-3.0${darwinDot0}${extension}${linuxDot0}
+      ln -s $PWD/src/libtracker-sparql/libtinysparql-3.0${darwinDot0}${extension} $out/lib/libtinysparql-3.0${darwinDot0}${extension}${linuxDot0}
     '';
 
   checkPhase = ''
     runHook preCheck
 
+    # The "tinysparql:core / service" test can take 180s+ when builder is in high load.
     dbus-run-session \
       --config-file=${dbus}/share/dbus-1/session.conf \
       meson test \
-        --timeout-multiplier 2 \
+        --timeout-multiplier 0 \
         --print-errorlogs
 
     runHook postCheck
@@ -164,9 +171,7 @@ stdenv.mkDerivation (finalAttrs: {
   '';
 
   passthru = {
-    updateScript = gnome.updateScript {
-      packageName = finalAttrs.pname;
-    };
+    updateScript = gnome.updateScript { packageName = finalAttrs.pname; };
     tests.pkg-config = testers.hasPkgConfigModules {
       package = finalAttrs.finalPackage;
     };
@@ -175,10 +180,10 @@ stdenv.mkDerivation (finalAttrs: {
   meta = with lib; {
     homepage = "https://tracker.gnome.org/";
     description = "Desktop-neutral user information store, search tool and indexer";
-    mainProgram = "tracker3";
+    mainProgram = "tinysparql";
     maintainers = teams.gnome.members;
     license = licenses.gpl2Plus;
     platforms = platforms.unix;
-    pkgConfigModules = [ "tracker-sparql-3.0" "tracker-testutils-3.0" ];
+    pkgConfigModules = [ "tracker-sparql-3.0" "tinysparql-3.0" ];
   };
 })
