@@ -313,8 +313,6 @@ with pkgs;
 
   beeper = callPackage ../applications/networking/instant-messengers/beeper { };
 
-  bakelite = callPackage ../tools/backup/bakelite { };
-
   bearer = callPackage ../development/tools/bearer { };
 
   benthos = callPackage ../development/tools/benthos { };
@@ -2382,8 +2380,6 @@ with pkgs;
 
   gitweb = callPackage ../applications/version-management/gitweb { };
 
-  glab = callPackage ../applications/version-management/glab { };
-
   glitter = callPackage ../applications/version-management/glitter { };
 
   globalping-cli = callPackage ../tools/networking/globalping-cli { };
@@ -3218,8 +3214,6 @@ with pkgs;
 
   boxxy = callPackage ../tools/misc/boxxy { };
 
-  boundary = callPackage ../tools/networking/boundary { };
-
   chamber = callPackage ../tools/admin/chamber {  };
 
   chaos = callPackage ../tools/networking/chaos {  };
@@ -3825,8 +3819,6 @@ with pkgs;
   qes = callPackage ../os-specific/darwin/qes {
     inherit (darwin.apple_sdk.frameworks) Carbon;
   };
-
-  waydroid = callPackage ../os-specific/linux/waydroid { };
 
   wgo = callPackage ../development/tools/wgo { };
 
@@ -5005,8 +4997,6 @@ with pkgs;
   pplatex = callPackage ../tools/typesetting/tex/pplatex { };
 
   tetex = callPackage ../tools/typesetting/tex/tetex { libpng = libpng12; };
-
-  tex-match = callPackage ../tools/typesetting/tex/tex-match { };
 
   texFunctions = callPackage ../tools/typesetting/tex/nix pkgs;
 
@@ -6273,8 +6263,6 @@ with pkgs;
 
   chkrootkit = callPackage ../tools/security/chkrootkit { };
 
-  chrony = callPackage ../tools/networking/chrony { };
-
   chunkfs = callPackage ../tools/filesystems/chunkfs { };
 
   chunksync = callPackage ../tools/backup/chunksync { };
@@ -6842,6 +6830,8 @@ with pkgs;
   decode-spam-headers = callPackage ../tools/networking/decode-spam-headers { };
 
   deer = callPackage ../shells/zsh/zsh-deer { };
+
+  deno_1 = callPackage ../by-name/de/deno/1/package.nix { };
 
   deqp-runner = callPackage ../tools/graphics/deqp-runner { };
 
@@ -10173,8 +10163,6 @@ with pkgs;
   };
 
   ms-sys = callPackage ../tools/misc/ms-sys { };
-
-  mtdutils = callPackage ../tools/filesystems/mtdutils { };
 
   mtools = callPackage ../tools/filesystems/mtools { };
 
@@ -15280,6 +15268,7 @@ with pkgs;
   mlir_16 = llvmPackages_16.mlir;
   mlir_17 = llvmPackages_17.mlir;
 
+  libclc = llvmPackages.libclc;
   libllvm = llvmPackages.libllvm;
   llvm-manpages = llvmPackages.llvm-manpages;
 
@@ -26381,8 +26370,6 @@ with pkgs;
 
   rojo = callPackage ../development/tools/rojo { };
 
-  mediamtx = callPackage ../servers/mediamtx { };
-
   rtkit = callPackage ../os-specific/linux/rtkit { };
 
   rt-tests = callPackage ../os-specific/linux/rt-tests { };
@@ -27334,8 +27321,6 @@ with pkgs;
   luna-icons = callPackage ../data/icons/luna-icons {
     inherit (plasma5Packages) breeze-icons;
   };
-
-  lxgw-wenkai = callPackage ../data/fonts/lxgw-wenkai { };
 
   maia-icon-theme = libsForQt5.callPackage ../data/icons/maia-icon-theme { };
 
@@ -28454,7 +28439,7 @@ with pkgs;
   cardo = callPackage ../data/fonts/cardo { };
 
   cage = callPackage ../applications/window-managers/cage {
-    wlroots = wlroots_0_17;
+    wlroots = wlroots_0_18;
   };
 
   calf = callPackage ../applications/audio/calf {
@@ -34456,10 +34441,6 @@ with pkgs;
 
   opensearch = callPackage ../servers/search/opensearch { };
 
-  osu-lazer = callPackage ../games/osu-lazer { };
-
-  osu-lazer-bin = callPackage ../games/osu-lazer/bin.nix { };
-
   pro-office-calculator = libsForQt5.callPackage ../games/pro-office-calculator { };
 
   qgo = libsForQt5.callPackage ../games/qgo { };
@@ -36324,8 +36305,6 @@ with pkgs;
     fftw = fftwSinglePrec;
   });
 
-  zegrapher = libsForQt5.callPackage ../applications/science/math/zegrapher { };
-
   ### SCIENCE/MEDICINE
 
   dcmtk = callPackage ../applications/science/medicine/dcmtk { };
@@ -38097,7 +38076,9 @@ with pkgs;
 
   tusk = callPackage ../applications/office/tusk { };
 
-  trufflehog = callPackage ../tools/security/trufflehog { };
+  trufflehog = callPackage ../tools/security/trufflehog {
+    buildGoModule = buildGo123Module;
+  };
 
   tunnelx = callPackage ../applications/gis/tunnelx { };
 

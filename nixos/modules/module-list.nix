@@ -215,7 +215,7 @@
   ./programs/iftop.nix
   ./programs/i3lock.nix
   ./programs/iio-hyprland.nix
-  ./programs/immersed-vr.nix
+  ./programs/immersed.nix
   ./programs/iotop.nix
   ./programs/java.nix
   ./programs/joycond-cemuhook.nix
@@ -1366,6 +1366,7 @@
   ./services/torrent/rtorrent.nix
   ./services/torrent/transmission.nix
   ./services/torrent/torrentstream.nix
+  ./services/torrent/qbittorrent.nix
   ./services/tracing/tempo.nix
   ./services/ttys/getty.nix
   ./services/ttys/gpm.nix
