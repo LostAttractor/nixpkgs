@@ -231,6 +231,16 @@ in
               "*.anotherone.com" = "http://localhost:80";
             };
           };
+
+          metrics = lib.mkOption {
+            type = with lib.types; nullOr str;
+            default = null;
+            description = ''
+              Tunnel metrics address.
+
+              See [https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/monitor-tunnels/metrics/](Tunnel metrics).
+            '';
+          };
         };
       }));
 
@@ -304,7 +314,10 @@ in
             serviceConfig = {
               User = cfg.user;
               Group = cfg.group;
-              ExecStart = "${cfg.package}/bin/cloudflared tunnel --config=${mkConfigFile} --no-autoupdate run";
+              ExecStart = ''${cfg.package}/bin/cloudflared tunnel --config=${mkConfigFile} \
+                ${lib.optionalString (tunnel.metrics != null) "--metrics ${tunnel.metrics}"} \
+                --no-autoupdate run
+              '';
               Restart = "on-failure";
             };
           })
