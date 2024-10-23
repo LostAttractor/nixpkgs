@@ -848,6 +848,7 @@ let
 
       sectionDHCPv4 = checkUnitConfig "DHCPv4" [
         (assertOnlyFields [
+          "RequestAddress"
           "UseDNS"
           "RoutesToDNS"
           "UseNTP"
@@ -1380,6 +1381,7 @@ let
           "FirewallMark"
           "Wash"
           "SplitGSO"
+          "RTTSec"
           "AckFilter"
         ])
         (assertValueOneOf "AutoRateIngress" boolValues)
