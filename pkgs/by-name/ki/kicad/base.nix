@@ -95,7 +95,7 @@ stdenv.mkDerivation (finalAttrs: {
   # tagged releases don't have "unknown"
   # kicad testing and nightlies use git describe --dirty
   # nix removes .git, so its approximated here
-  postPatch = lib.optionalString (!stable || testing) ''
+  postPatch = lib.optionalString (!(stable || testing)) ''
     substituteInPlace cmake/KiCadVersion.cmake \
       --replace-fail "unknown" "${builtins.substring 0 10 finalAttrs.src.rev}"
 
