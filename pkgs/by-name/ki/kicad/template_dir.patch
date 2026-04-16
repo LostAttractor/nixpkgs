@@ -1,0 +1,33 @@
+diff --git a/common/libraries/library_manager.cpp b/common/libraries/library_manager.cpp
+index a0fbde223a..fa56b673c3 100644
+--- a/common/libraries/library_manager.cpp
++++ b/common/libraries/library_manager.cpp
+@@ -349,12 +349,7 @@ wxString LIBRARY_MANAGER::DefaultGlobalTablePath( LIBRARY_TABLE_TYPE aType )
+ 
+ wxString LIBRARY_MANAGER::StockTablePath( LIBRARY_TABLE_TYPE aType )
+ {
+-    wxString basePath = PATHS::GetStockTemplatesPath();
+-
+-    wxFileName fn( basePath, tableFileName( aType ) );
+-    fn.Normalize( FN_NORMALIZE_FLAGS | wxPATH_NORM_ENV_VARS );
+-
+-    return fn.GetFullPath();
++    return PATHS::GetStockTemplatesPath() + wxT( "/" ) + tableFileName( aType );
+ }
+ 
+ 
+diff --git a/common/paths.cpp b/common/paths.cpp
+index 8b7a93d6a8..735654d5f0 100644
+--- a/common/paths.cpp
++++ b/common/paths.cpp
+@@ -354,6 +354,10 @@ wxString PATHS::GetStockScriptingPath()
+ 
+ wxString PATHS::GetStockTemplatesPath()
+ {
++    if( wxGetEnv( wxT( "KICAD10_TEMPLATE_DIR" ), NULL ) ) {
++        return wxT( "${KICAD10_TEMPLATE_DIR}" );
++    }
++
+     wxFileName fn;
+     
+     fn.AssignDir( GetStockEDALibraryPath() );
