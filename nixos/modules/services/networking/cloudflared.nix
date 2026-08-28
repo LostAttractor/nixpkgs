@@ -299,7 +299,17 @@ in
                   "*.anotherone.com" = "http://localhost:80";
                 };
               };
-            };
+    
+          metrics = lib.mkOption {
+            type = with lib.types; nullOr str;
+            default = null;
+            description = ''
+              Tunnel metrics address.
+
+              See [https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/monitor-tunnels/metrics/](Tunnel metrics).
+            '';
+          };
+        };
           }
         )
       );
@@ -386,10 +396,12 @@ in
           RuntimeDirectoryMode = "0400";
           LoadCredential = [
             "credentials.json:${tunnel.credentialsFile}"
-          ]
-          ++ (lib.optional (certFile != null) "cert.pem:${certFile}");
+          ] ++ (lib.optional (certFile != null) "cert.pem:${certFile}");
 
-          ExecStart = "${cfg.package}/bin/cloudflared tunnel --config=${mkConfigFile} --no-autoupdate run";
+          ExecStart = ''${cfg.package}/bin/cloudflared tunnel --config=${mkConfigFile} \
+            ${lib.optionalString (tunnel.metrics != null) "--metrics ${tunnel.metrics}"} \
+            --no-autoupdate run
+          '';
           Restart = "on-failure";
           DynamicUser = true;
         };
