@@ -186,6 +186,7 @@
   ./programs/bcc.nix
   ./programs/benchexec.nix
   ./programs/browserpass.nix
+  ./programs/btop.nix
   ./programs/btrfs-heatmap.nix
   ./programs/calls.nix
   ./programs/captive-browser.nix
