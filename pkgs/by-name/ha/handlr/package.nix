@@ -24,6 +24,12 @@ rustPlatform.buildRustPackage {
 
   cargoHash = "sha256-/Kk2vuFkgtHarLrjqc5PkRZL2pV1Y7Gb02mWwtaVpDI=";
 
+  # shared-mime-info 2.5 changed the canonical MIME type for shell scripts.
+  postPatch = ''
+    substituteInPlace src/common/mime_types.rs \
+      --replace-fail '"application/x-shellscript"' '"text/x-shellscript"'
+  '';
+
   nativeBuildInputs = [
     installShellFiles
     shared-mime-info
