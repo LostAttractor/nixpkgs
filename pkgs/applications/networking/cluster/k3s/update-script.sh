@@ -1,5 +1,5 @@
 #!/usr/bin/env nix-shell
-#!nix-shell -i bash -p curl git gnugrep gnused go jq nurl yq-go
+#!nix-shell -i bash -p curl findutils git gnugrep gnused go jq nurl yq-go
 
 set -x -eu -o pipefail
 
@@ -47,36 +47,33 @@ CNIPLUGINS_SHA256=$(nix-prefetch-url --quiet --unpack \
 CONTAINERD_SHA256=$(nix-prefetch-url --quiet --unpack \
     "https://github.com/k3s-io/containerd/archive/refs/tags/${VERSION_CONTAINERD}.tar.gz")
 
-CHART_FILES=( $(yq eval --no-doc .spec.chart "${K3S_STORE_PATH}/manifests/traefik.yaml" | xargs -n1 basename) )
-# These files are:
-#   1. traefik-crd-20.3.1+up20.3.0.tgz
-#   2. traefik-20.3.1+up20.3.0.tgz
-# at the time of writing
+# Discover charts across all manifests, including multi-document YAML files.
+# Other manifests contain unexpanded K3s placeholders that are not valid YAML.
+CHART_FILES=$(grep -rlZ --include='*.yaml' -F 'HelmChart' "${K3S_STORE_PATH}/manifests" \
+    | xargs -0 -r yq eval --no-doc 'select(.kind == "HelmChart") | .spec.chart' \
+    | xargs -r -n1 basename | sort -u)
 
-if [[ "${#CHART_FILES[@]}" != "2" ]]; then
-    echo "New manifest charts added, the packaging scripts will need to be updated: ${CHART_FILES}"
+if [[ -z "$CHART_FILES" ]]; then
+    echo "No Helm charts found in the upstream manifests"
     exit 1
 fi
 
 cd "${NIXPKGS_K3S_PATH}/${MAJOR_VERSION}_${MINOR_VERSION}"
 
 CHARTS_URL=https://k3s.io/k3s-charts/assets
-TRAEFIK_CRD_CHART_SHA256=$(nix-hash --type sha256 --base32 --flat <(curl -o - "${CHARTS_URL}/traefik-crd/${CHART_FILES[0]}"))
-TRAEFIK_CHART_SHA256=$(nix-hash --type sha256 --base32 --flat <(curl -o - "${CHARTS_URL}/traefik/${CHART_FILES[1]}"))
-# Get metadata for both files
-rm -f chart-versions.nix.update
-cat > chart-versions.nix.update <<EOF
-{
-  traefik-crd = {
-    url = "${CHARTS_URL}/traefik-crd/${CHART_FILES[0]}";
-    sha256 = "$TRAEFIK_CRD_CHART_SHA256";
+echo '{' > chart-versions.nix.update
+while read -r CHART_FILE; do
+    CHART_NAME=$(sed -E 's/-[0-9].*//' <<< "$CHART_FILE")
+    CHART_URL="${CHARTS_URL}/${CHART_NAME}/${CHART_FILE}"
+    CHART_SHA256=$(nix-prefetch-url --quiet "$CHART_URL")
+    cat >> chart-versions.nix.update <<EOF
+  ${CHART_NAME} = {
+    url = "$CHART_URL";
+    sha256 = "$CHART_SHA256";
   };
-  traefik = {
-    url = "${CHARTS_URL}/traefik/${CHART_FILES[1]}";
-    sha256 = "$TRAEFIK_CHART_SHA256";
-  };
-}
 EOF
+done <<< "$CHART_FILES"
+echo '}' >> chart-versions.nix.update
 mv chart-versions.nix.update chart-versions.nix
 
 # Concatenate all sha256sums, one entry per line
