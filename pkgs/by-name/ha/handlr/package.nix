@@ -32,6 +32,12 @@ rustPlatform.buildRustPackage {
 
   nativeCheckInputs = [ writableTmpDirAsHomeHook ];
 
+  # shared-mime-info 2.5 aliased application/x-shellscript to text/x-shellscript
+  # Skip tests that have the old type hardcoded.
+  checkFlags = [
+    "--skip=common::mime_types::tests::from_path"
+  ];
+
   postInstall = ''
     installShellCompletion \
       --zsh  completions/_handlr \
