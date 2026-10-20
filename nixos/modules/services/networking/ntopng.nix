@@ -158,6 +158,7 @@ in
       wantedBy = [ "multi-user.target" ];
       serviceConfig.ExecStart = "${pkgs.ntopng}/bin/ntopng ${configFile}";
       unitConfig.Documentation = "man:ntopng(8)";
+      path = with pkgs; [ nettools gawk ];
     };
 
     users.extraUsers.ntopng = {
