@@ -6,13 +6,11 @@ set -eu -o pipefail
 
 package_dir=$(dirname "$(readlink --canonicalize-existing "${BASH_SOURCE[0]}")")
 package_file="$package_dir/package.nix"
-release=$(curl ${GITHUB_TOKEN:+-u ":$GITHUB_TOKEN"} --silent --fail --location \
-  "https://api.github.com/repos/openai/codex/releases/latest")
-tag=$(jq --exit-status --raw-output '.tag_name' <<<"$release")
+tag=$(sed --silent --regexp-extended 's/^  version = "([^"]+)";$/rust-v\1/p' "$package_file")
 commit=$(curl ${GITHUB_TOKEN:+-u ":$GITHUB_TOKEN"} --silent --fail --location \
   "https://api.github.com/repos/openai/codex/commits/$tag" \
   | jq --exit-status --raw-output '.sha')
 
 sed --in-place --regexp-extended \
-  "s|buildCommit = \"[0-9a-f]{40}\";|buildCommit = \"$commit\";|" \
+  "s|buildCommit = \"[^\"]+\";|buildCommit = \"$commit\";|" \
   "$package_file"
